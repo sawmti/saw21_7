@@ -39,7 +39,7 @@ docker-compose up
 ## Contributors
 
 - [Jose Emilio Labra Gayo](http://labra.weso.es)
-- 
+- [Jose Miguel Catalan Gutierrez](https://github.com/jcatalan845)
 
 ## Credits
 
