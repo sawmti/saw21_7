@@ -1,10 +1,18 @@
-const express = require('express');
-const path = require('path');
-const https = require('https');
-const querystring = require("querystring")
+
+import morgan from 'morgan';
+import express, { json } from 'express';
+import exoplanetsRouter from './routes/exoplanets.js';
+import { serve, setup } from 'swagger-ui-express';
+import swaggerJsDoc from 'swagger-jsdoc';
+import path from 'path';
+import {fileURLToPath} from 'url';
 
 const app = express();
-const root = path.resolve(__dirname, '..');
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const root = path.resolve(__dirname, '../');
 
 // Log invocations
 app.use(function (req, res, next) { console.log(req.url); next(); });
@@ -12,50 +20,31 @@ app.use(function (req, res, next) { console.log(req.url); next(); });
 // Directly serve static content from /client
 app.use(express.static(root + '/client'));
 
-// Simple REST API that returns some entities
-app.get('/api/entities', (req, res) =>
-  res.send({
-    entities:
-      ['Q2887',
-        'Q33986'
-      ]
-  })
-);
+// settings
+const options = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Exoplanets API",
+      version: "1.0.0",
+      description: "A simple express library API",
+    },
+    servers: [
+      {
+        url: "http://localhost:3000",
+      },
+    ],
+  },
+  apis: ["./api/routes/*.js"],
+};
+const specs = swaggerJsDoc(options);
 
-app.get('/api/entities/:id', (req, res) => {
-  console.log(`Searching ${req.params.id}`);
-  const queryParams = new URLSearchParams(
-    [['query', `select * where { wd:Q${req.params.id} rdfs:label $label . FILTER (lang($label) = 'es')}`],
-    ['format', 'json']
-    ]).toString();
-  const options = {
-    hostname: 'query.wikidata.org',
-    port: 443,
-    path: `/sparql?${queryParams}`,
-    method: 'GET',
-    headers: { 'User-Agent': 'Example/1.0' }
-  }
-  https.get(options, httpres => {
-    let data = [];
-    console.log('Status Code:', httpres.statusCode);
-    httpres.on('data', chunk => {
-      data.push(chunk);
-    });
-    httpres.on('end', () => {
-      console.log('Response ended:');
-      const result = Buffer.concat(data).toString();
-      console.log(`Result obtained:\n${result}\n---`);
-      const json = JSON.parse(result);
-      const bindings = json.results.bindings;
-      const label = bindings.length > 0 ? bindings[0].label.value : 'Not found';
-      res.send({
-        entity: `${req.params.id}`,
-        label: `${label}`
-      })
-    });
-  }).on('error', err => {
-    console.log('Error: ', err.message);
-  })
-});
+// middlewares
+app.use(json());
+app.use(morgan("dev"));
+app.use("/api-docs", serve, setup(specs));
 
-module.exports = app;
+// Routes
+app.use(exoplanetsRouter);
+
+export { app };

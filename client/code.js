@@ -1,16 +1,18 @@
 async function getEntities() {
-    const response = await fetch('/api/entities');
+    const response = await fetch('/api/wikidata/exoplanets');
     const data = await response.json();
     return data
 }
 
 function fillEntities() {
     getEntities().then(data => {
-        console.log(data.entities);
         const ulEntities = document.getElementById("entities");
-        data.entities.forEach(entity => {
+        data.results.bindings.forEach(item => {
           const liEntity = document.createElement("li");
-          const text = document.createTextNode(entity);
+
+          const Qid = new URL(item.exoplaneta.value);      
+          const text = document.createTextNode(Qid.pathname.split("/")[2]);
+          
           liEntity.appendChild(text);
           ulEntities.appendChild(liEntity);
         })

@@ -1,0 +1,22 @@
+{
+  "exoplanets": [
+    {
+      "id": "Q81306020",
+      "name": "Kepler 2",
+      "discoverer": "Prof 2",
+      "image": ""
+    },
+    {
+      "id": "Q26692445",
+      "name": "",
+      "discoverer": "",
+      "image": ""
+    },
+    {
+      "id": "Q14624923",
+      "name": "",
+      "discoverer": "",
+      "image": ""
+    }
+  ]
+}
