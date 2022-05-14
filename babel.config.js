@@ -8,4 +8,4 @@ const presets=[
                   },
                 ],
               ];
-export { presets };
+export default presets;
