@@ -1,15 +1,15 @@
-import Router from  'express';
+const Router = require('express');
 const router = Router();
-import {
-  getExoplanet,
+const {
   getExoplanets,
+  getWikiDataExoplanet,
+  getWikiDataExoplanets,
   createExoplanet,
+  getExoplanet,
   updateExoplanet,
   deleteExoplanet,
-  count,
-  getWikiDataExoplanets,
-  getWikiDataExoplanet,
-} from "../controllers/exoplanets.controller.js";
+  countExoplanetas
+} = require('../controllers/exoplanets.controller.js');
 
 /**
  * @swagger
@@ -22,6 +22,7 @@ import {
  *        - name
  *        - discoverer
  *        - image
+ *        - wiki
  *      properties:
  *        id:
  *          type: string
@@ -35,11 +36,15 @@ import {
  *        image:
  *          type: string
  *          description: The image of the exoplanet
+ *        wiki:
+ *          type: string
+ *          description: link to wikipedia
  *      example:
  *        id: Q14624923
  *        name: Kepler-78b
  *        description: Sanchis-Ojeda
  *        image: Kepler-62f_with_62e_as_Morning_Star.jpg
+ *        wiki: https://es.wikipedia.org/wiki/Gliese_777_c
  *  parameters:
  *    exoplanetId:
  *      in: path
@@ -92,7 +97,7 @@ router.get("/api/exoplanets", getExoplanets);
  *              example: 10
  */
 
-router.get("/api/exoplanets/count", count);
+router.get("/api/exoplanets/count", countExoplanetas);
 
 /**
  * @swagger
@@ -239,4 +244,4 @@ router.delete("/api/exoplanets/:id", deleteExoplanet);
 router.get("/api/wikidata/exoplanets/:id", getWikiDataExoplanet);
 
 
-export default router;
+module.exports= router;

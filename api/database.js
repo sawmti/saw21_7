@@ -1,23 +1,30 @@
-import { Low, JSONFile } from "lowdb";
-import { join, dirname } from "path";
-import { fileURLToPath } from "url";
+const { MongoClient } = require('mongodb');
+require('dotenv').config({ path: './config.env' });
 
-let db;
+const connectionString = process.env.ATLAS_URI;
+const client = new MongoClient(connectionString, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
 
-export async function createConnection() {
-  // Use JSON file for storage
-  const file = join(__dirname, "../db/db.json");
-  const adapter = new JSONFile(file);
-  db = new Low(adapter);
+let dbConnection;
 
-  // Read data from JSON file, this will set db.data content
-  await db.read();
+module.exports = {
+  connectToServer: function (callback) {
+    client.connect(function (err, db) {
+      if (err || !db) {
+        return callback(err);
+      }
 
-  db.data ||= { tasks: [] };
-  // Write db.data content to db.json
-  await db.write();
-}
+      dbConnection = db.db(process.env.DB_APP);
+      console.log('Successfully connected to MongoDB.');
 
-export const getConnection = () => db;
+      return callback();
+    });
+  },
+
+  getDb: function () {
+    return dbConnection;
+  },
+};

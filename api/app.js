@@ -1,24 +1,21 @@
 
-import morgan from 'morgan';
-import express, { json } from 'express';
-import exoplanetsRouter from './routes/exoplanets.js';
-import { serve, setup } from 'swagger-ui-express';
-import swaggerJsDoc from 'swagger-jsdoc';
-import path from 'path';
-import {fileURLToPath} from 'url';
+const express = require('express');
+const path = require('path');
+const exoplanetsRouter = require('./routes/exoplanets.js');
+const morgan =require('morgan');
+const { serve, setup } =require('swagger-ui-express');
+const swaggerJsDoc = require('swagger-jsdoc');
+require('dotenv').config({ path: './config.env' });
 
 const app = express();
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const root = path.resolve(__dirname, '../');
+const root = path.resolve(__dirname, '..');
 
 // Log invocations
 app.use(function (req, res, next) { console.log(req.url); next(); });
 
 // Directly serve static content from /client
 app.use(express.static(root + '/client'));
+
 
 // settings
 const options = {
@@ -40,11 +37,11 @@ const options = {
 const specs = swaggerJsDoc(options);
 
 // middlewares
-app.use(json());
+app.use(express.json());
 app.use(morgan("dev"));
 app.use("/api-docs", serve, setup(specs));
 
 // Routes
 app.use(exoplanetsRouter);
 
-export { app };
+module.exports = app;

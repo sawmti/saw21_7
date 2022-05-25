@@ -1,78 +1,117 @@
-import { getConnection } from "../database.js";
-import https from 'https';
+const dbo = require('../database.js');
+const https = require('https');
 
 
-export const getExoplanets = (req, res) => {
-  const exoplanets = getConnection().data.exoplanets;
-  res.json(exoplanets);
+const getExoplanets = (req, res) => {
+const dbConnect = dbo.getDb();
+
+  dbConnect
+    .collection('exoplaneta')
+    .find({})
+    .toArray(function (err, result) {
+      if (err) {
+        res.status(400).send('Error fetching exoplanetas!');
+      } else {
+        res.json(result);
+      }
+    });
 };
 
-export const createExoplanet = async (req, res) => {
+const createExoplanet = async (req, res) => {
+  const dbConnect = dbo.getDb();
   const newExoplanet = {
     id: req.body.id,
     name: req.body.name,
     discoverer: req.body.discoverer,
-    image: req.body.image
+    image: req.body.image,
+    wiki: req.body.wiki
   };
 
-  try {
-    const db = getConnection();
-    db.data.exoplanets.push(newExoplanet);
-    await db.write();
-
-    res.json(newExoplanet);
-  } catch (error) {
-    return res.status(500).send(error);
-  }
+  dbConnect
+  .collection('exoplaneta')
+  .insertOne(newExoplanet, function (err, result) {
+    if (err) {
+      res.status(400).send('Error inserting exoplaneta!');
+    } else {
+      console.log(`Added a new exoplaneta with id ${result.insertedId}`);
+      res.json({message : 'OK'});
+    }
+  });
 };
 
-export const getExoplanet = (req, res) => {
-  const exoplanetFound = getConnection().data.exoplanets.find((exo) => exo.id === req.params.id);
-  if (!exoplanetFound) res.sendStatus(404);
-  res.json(exoplanetFound);
+const getExoplanet = (req, res) => {
+  const dbConnect = dbo.getDb();
+
+  dbConnect
+    .collection('exoplaneta')
+    .find({id: req.body.id})
+    .toArray(function (err, result) {
+      if (err) {
+        res.status(400).send('Error fetching exoplaneta!');
+      } else {
+        res.json(result);
+      }
+    });
 };
 
-export const updateExoplanet = async (req, res) => {
-  const { name, discoverer,image } = req.body;
+const updateExoplanet = async (req, res) => {
+  const dbConnect = dbo.getDb();
+  const listingQuery = { id: req.body.id };
+  const uptExoplanet = {
+    name: req.body.name,
+    discoverer: req.body.discoverer,
+    image: req.body.image,
+    wiki: req.body.wiki
+  };
+  
+  dbConnect
+    .collection('exoplaneta')
+    .updateOne(listingQuery, uptExoplanet, function (err, _result) {
+      if (err) {
+        res
+          .status(400)
+          .send(`Error updating likes on exoplaneta with id ${listingQuery.id}!`);
+      } else {
+        console.log('1 exoplaneta updated');
+        res.json({message : 'OK'});
+      }
+    });
 
-  try {
-    const db = getConnection();
-    const exoplanetFound = db.data.exoplanets.find((exo) => exo.id === req.params.id);
-    if (!exoplanetFound) return res.sendStatus(404);
-    
-    exoplanetFound.id = req.params.id;
-    exoplanetFound.name = name;
-    exoplanetFound.discoverer = discoverer;
-    exoplanetFound.image = image;
-
-    db.data.exoplanets.map((exo) => (exo.id === req.params.id ? exoplanetFound : exo));
-
-    await db.write();
-
-    res.json(exoplanetFound);
-  } catch (error) {
-    return res.status(500).send(error.message);
-  }
 };
 
-export const deleteExoplanet = async (req, res) => {
-  const db = getConnection();
-  const exoplanetFound = db.data.exoplanets.find((exo) => exo.id === req.params.id);
-  if (!exoplanetFound) res.sendStatus(404);
+const deleteExoplanet = async (req, res) => {
+  const dbConnect = dbo.getDb();
+  const listingQuery = { id: req.body.id };
 
-  const newExoplanets = db.data.exoplanets.filter((exo) => exo.id !== req.params.id);
-  db.data.exoplanets = newExoplanets;
-  await db.write();
-
-  return res.json(exoplanetFound);
+  dbConnect
+    .collection('exoplaneta')
+    .deleteOne(listingQuery, function (err, _result) {
+      if (err) {
+        res
+          .status(400)
+          .send(`Error deleting exoplaneta with id ${listingQuery.id}!`);
+      } else {
+        console.log('1 exoplaneta deleted');
+        res.json({message : 'OK'});
+      }
+    });
 };
 
-export const count = async (req, res) => {
-  const totalExoplanets = getConnection().data.exoplanets.length;
-  res.json(totalExoplanets);
+const countExoplanetas = async (req, res) => {
+  const dbConnect = dbo.getDb();
+
+  dbConnect
+    .collection('exoplaneta')
+    .countDocuments(function (err, result) {
+      if (err) {
+        res.status(400).send('Error fetching exoplaneta!');
+      } else {
+        res.json({count : result});
+      }
+    });
 };
 
-export const getWikiDataExoplanets = async (req, res) => {
+const getWikiDataExoplanets = async (req, res) => {
    const queryParams = new URLSearchParams(
     [['query', `SELECT DISTINCT ?exoplaneta ?dicovererLabel ?exoplanetaLabel ?image ?link WHERE {
       ?exoplaneta wdt:P31 wd:Q44559.
@@ -98,8 +137,6 @@ export const getWikiDataExoplanets = async (req, res) => {
     httpres.on('end', () => {
        const result = Buffer.concat(data).toString();
       const json = JSON.parse(result);
-      //const bindings = json.results.bindings;
-      //const label = bindings.length > 0 ? bindings[0].label.value : 'Not found';
       res.send(json);
     });
   }).on('error', err => {
@@ -108,7 +145,7 @@ export const getWikiDataExoplanets = async (req, res) => {
 };
 
 
-export const getWikiDataExoplanet = async (req, res) => {
+const getWikiDataExoplanet = async (req, res) => {
   const queryParams = new URLSearchParams(
    [['query', `SELECT DISTINCT ?exoplaneta ?dicovererLabel ?exoplanetaLabel ?image ?link WHERE {
      ?exoplaneta wdt:P31 wd:Q44559.
@@ -135,11 +172,19 @@ export const getWikiDataExoplanet = async (req, res) => {
    httpres.on('end', () => {
       const result = Buffer.concat(data).toString();
      const json = JSON.parse(result);
-     //const bindings = json.results.bindings;
-     //const label = bindings.length > 0 ? bindings[0].label.value : 'Not found';
      res.send(json)
    });
  }).on('error', err => {
    console.log('Error: ', err.message);
  })
 };
+
+module.exports = { getExoplanets,
+                  getWikiDataExoplanet,
+                  getWikiDataExoplanets,
+                  createExoplanet,
+                  getExoplanet,
+                  updateExoplanet,
+                  deleteExoplanet,
+                  countExoplanetas
+                 };
