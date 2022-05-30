@@ -44,12 +44,12 @@ const getExoplanet = (req, res) => {
 
   dbConnect
     .collection('exoplaneta')
-    .find({id: req.body.id})
+    .find({id: req.params.id})
     .toArray(function (err, result) {
       if (err) {
         res.status(400).send('Error fetching exoplaneta!');
       } else {
-        res.json(result);
+        res.status(200).json({"status":"ok" , "exoplaneta": result[0]});
       }
     });
 };
@@ -57,13 +57,14 @@ const getExoplanet = (req, res) => {
 const updateExoplanet = async (req, res) => {
   const dbConnect = dbo.getDb();
   const listingQuery = { id: req.body.id };
-  const uptExoplanet = {
+  const uptExoplanet = { $set: {
     name: req.body.name,
     discoverer: req.body.discoverer,
     image: req.body.image,
     wiki: req.body.wiki
-  };
-  
+  }};
+  console.log(listingQuery);
+  console.log(uptExoplanet);
   dbConnect
     .collection('exoplaneta')
     .updateOne(listingQuery, uptExoplanet, function (err, _result) {
@@ -111,6 +112,21 @@ const countExoplanetas = async (req, res) => {
     });
 };
 
+const existeExoplaneta = async (req, res) => {
+  const dbConnect = dbo.getDb();
+
+  dbConnect
+    .collection('exoplaneta')
+    .find({id: req.params.id})
+    .count(function (err, result) {
+      if (err) {
+        res.status(400).send('Error fetching exoplaneta!');
+      } else {
+        res.json({count : result});
+      }
+    });
+};
+
 const getWikiDataExoplanets = async (req, res) => {
    const queryParams = new URLSearchParams(
     [['query', `SELECT DISTINCT ?exoplaneta ?dicovererLabel ?exoplanetaLabel ?image ?link WHERE {
@@ -119,7 +135,7 @@ const getWikiDataExoplanets = async (req, res) => {
       ?exoplaneta wdt:P18 ?image.
       ?exoplaneta wdt:P61 ?dicoverer.
       ?link schema:about ?exoplaneta.
-      ?link schema:isPartOf <https://es.wikipedia.org/>.}`],
+      ?link schema:isPartOf <https://es.wikipedia.org/>.} ORDER BY DESC (?exoplaneta)`],
     ['format', 'json']
     ]).toString();
   const options = {
@@ -172,7 +188,7 @@ const getWikiDataExoplanet = async (req, res) => {
    httpres.on('end', () => {
       const result = Buffer.concat(data).toString();
      const json = JSON.parse(result);
-     res.send(json)
+     res.status(200).send(json);
    });
  }).on('error', err => {
    console.log('Error: ', err.message);
@@ -186,5 +202,6 @@ module.exports = { getExoplanets,
                   getExoplanet,
                   updateExoplanet,
                   deleteExoplanet,
-                  countExoplanetas
+                  countExoplanetas,
+                  existeExoplaneta
                  };

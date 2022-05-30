@@ -8,7 +8,8 @@ const {
   getExoplanet,
   updateExoplanet,
   deleteExoplanet,
-  countExoplanetas
+  countExoplanetas,
+  existeExoplaneta
 } = require('../controllers/exoplanets.controller.js');
 
 /**
@@ -101,7 +102,7 @@ router.get("/api/exoplanets/count", countExoplanetas);
 
 /**
  * @swagger
- * /api/exoplanets/{id}:
+ * /api/exoplanets/:id:
  *  get:
  *    summary: Get a Exoplanets by Id
  *    tags: [Exoplanets]
@@ -126,7 +127,7 @@ router.get("/api/exoplanets/:id", getExoplanet);
 
 /**
  * @swagger
- * /api/exoplanets:
+ * /api/exoplanets/create:
  *  post:
  *    summary: create a new exoplanets
  *    tags: [Exoplanets]
@@ -146,11 +147,11 @@ router.get("/api/exoplanets/:id", getExoplanet);
  *      500:
  *        description: Some server error
  */
-router.post("/api/exoplanets", createExoplanet);
+router.post("/api/exoplanets/create", createExoplanet);
 
 /**
  * @swagger
- * /exoplanets/{id}:
+ * /api/exoplanets/update:
  *  put:
  *    summary: update a task by the id
  *    tags: [Exoplanets]
@@ -179,11 +180,11 @@ router.post("/api/exoplanets", createExoplanet);
  *      500:
  *        description: some server error
  */
-router.put("/api/exoplanets/:id", updateExoplanet);
+router.put("/api/exoplanets/update", updateExoplanet);
 
 /**
  * @swagger
- * /api/exoplanets/{id}:
+ * /api/exoplanets/delete:
  *  delete:
  *    summary: delete a exoplanet by id
  *    tags: [Exoplanets]
@@ -197,7 +198,25 @@ router.put("/api/exoplanets/:id", updateExoplanet);
  *
  */
 
-router.delete("/api/exoplanets/:id", deleteExoplanet);
+router.delete("/api/exoplanets/delete", deleteExoplanet);
+
+
+/**
+ * @swagger
+ * /api/exoplanets/existe/:id:
+ *  get:
+ *    summary: get exoplanets exists 
+ *    tags: [Exoplanets]
+ *    responses:
+ *      200:
+ *        description: existe exoplaneta
+ *        content:
+ *          text/plain:
+ *            schema:
+ *              type: integer
+ *              example: 10
+ */
+router.get("/api/exoplanets/existe/:id", existeExoplaneta);
 
 /**
  * @swagger

@@ -5,7 +5,7 @@ require('dotenv').config({ path: './config.env' });
 // get MongoDB driver connection
 const dbo = require('./api/database.js');
 
-const port =  process.env.PORT || 3000;
+const port =  process.env.PORT || 4000;
 
 // perform a database connection when the server starts
 dbo.connectToServer(function (err) {
