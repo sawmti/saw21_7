@@ -32,6 +32,12 @@ function loadTable() {
     window.location.href="/wikidata.html";
  }
 
+ function volverHome()
+ {
+
+    window.location.href="/index.html";
+ }
+
   function exoplanetaDelete(id) {
     const xhttp = new XMLHttpRequest();
     xhttp.open("DELETE", "/api/exoplanets/delete");
