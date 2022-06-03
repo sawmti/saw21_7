@@ -19,7 +19,7 @@ npm install
 npm start
 ```
 
-You should be able to access the application in [http://localhost:3000](http://localhost:3000).
+You should be able to access the application in [http://localhost:4000](http://localhost:4000).
 
 ## Running from Docker
 
@@ -41,6 +41,8 @@ docker-compose up
 - [Jose Emilio Labra Gayo](http://labra.weso.es)
 - [Jose Miguel Catalan Gutierrez](https://github.com/jcatalan845)
 - [Alfonso Sanchez Toledo](https://github.com/asancht)
+- [Leonardo Toledo Ormeño](https://github.com/leontole)
+- [Oliver Bravo Martinez](https://github.com/krionel)
 
 ## Credits
 
