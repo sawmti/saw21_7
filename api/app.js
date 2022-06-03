@@ -28,10 +28,10 @@ const options = {
     },
     servers: [
       {
-        url: "https://web-exoplanetas.herokuapp.com/",
+        url: "https://web-exoplanetas.herokuapp.com",
       },
       {
-        url: "https://localhost:4000/",
+        url: "https://localhost:4000",
       },
     ],
   },
