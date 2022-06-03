@@ -70,12 +70,13 @@ function loadTable() {
 
         Swal.fire({
           title: 'Agregar Exoplaneta',
+          width: 650,
           html:
-            '<input id="id" class="swal2-input" placeholder="Id Wikidata" value="'+textId+'">' +
-            '<input id="image" class="swal2-input" placeholder="Link Imagen" value="'+object.image.value+'">' +
-            '<input id="name" class="swal2-input" placeholder="Nombre" value="'+object.exoplanetaLabel.value+'">' +
-            '<input id="discoverer" class="swal2-input" placeholder="Descubridor" value="'+object.dicovererLabel.value+'">' +
-            '<input id="wiki" class="swal2-input" placeholder="Link Wikipedia" value="'+object.link.value+'">',
+            '<label>Wikidata id</label><br><input id="id" class="swal2-input" placeholder="Id Wikidata" value="'+textId+'" readonly>' +
+            '<br><br><label>Imagen</label><br><input id="image" class="swal2-input" placeholder="Link Imagen" value="'+object.image.value+'" size="45">' +
+            '<br><br><label>Nombre</label><br><input id="name" class="swal2-input" placeholder="Nombre" value="'+object.exoplanetaLabel.value+'" size="45">' +
+            '<br><br><label>Descubridor</label><br><input id="discoverer" class="swal2-input" placeholder="Descubridor" value="'+object.dicovererLabel.value+'" size="45">' +
+            '<br><br><label>Link Wikipedia</label><br><input id="wiki" class="swal2-input" placeholder="Link Wikipedia" value="'+object.link.value+'" size="45">',
           focusConfirm: false,
           preConfirm: () => {
             exoplanetaCreate();
@@ -102,7 +103,7 @@ function loadTable() {
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         const objects = JSON.parse(this.responseText);
-        Swal.fire(objects['message']);
+        Swal.fire(objects['message']+",Datos guardados!");
         loadIdExistentes();
         loadTable();
       }
@@ -114,9 +115,3 @@ function loadTable() {
  
      window.location.href="/admin.html";
   }
-
-  /*
-  function isObject(val) {
-    if (val === null) { return false;}
-    return ( (typeof val === 'function') || (typeof val === 'object') );
-  }*/

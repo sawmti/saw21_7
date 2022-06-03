@@ -48,7 +48,7 @@ function loadTable() {
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4) {
         const objects = JSON.parse(this.responseText);
-        Swal.fire(objects['message']);
+        Swal.fire(objects['message']+",Datos eliminados!");
         loadTable();
       } 
     };
@@ -65,12 +65,13 @@ function loadTable() {
         const exo = objects['exoplaneta'];
         Swal.fire({
           title: 'Editar Exoplaneta',
+          width: 650,
           html:
-            '<input id="id" class="swal2-input" placeholder="Id Wikidata" value="'+exo['id']+'">' +
-            '<input id="image" class="swal2-input" placeholder="Link Imagen" value="'+exo[ 'image' ]+'">' +
-            '<input id="name" class="swal2-input" placeholder="Nombre" value="'+exo[ 'name' ]+'">' +
-            '<input id="discoverer" class="swal2-input" placeholder="Descubridor" value="'+exo[ 'discoverer' ]+'">' +
-            '<input id="wiki" class="swal2-input" placeholder="Link Wikipedia" value="'+exo[ 'wiki' ]+'">',
+            '<label>Wikidata id</label><br><input id="id" class="swal2-input" placeholder="Id Wikidata" value="'+exo['id']+'" readonly>' +
+            '<br><br><label>Imagen</label><br><input id="image" class="swal2-input" placeholder="Link Imagen" value="'+exo[ 'image' ]+'" size="45">' +
+            '<br><br><label>Nombre</label><br><input id="name" class="swal2-input" placeholder="Nombre" value="'+exo[ 'name' ]+'" size="45">' +
+            '<br><br><label>Descubridor</label><br><input id="discoverer" class="swal2-input" placeholder="Descubridor" value="'+exo[ 'discoverer' ]+'" size="45">' +
+            '<br><br><label>Link Wikipedia</label><br><input id="wiki" class="swal2-input" placeholder="Link Wikipedia" value="'+exo[ 'wiki' ]+'" size="45">',
           focusConfirm: false,
           preConfirm: () => {
             exoEdit();
@@ -97,47 +98,8 @@ function loadTable() {
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         const objects = JSON.parse(this.responseText);
-        Swal.fire(objects['message']);
+        Swal.fire(objects['message'] + ", Datos guardados!");
         loadTable();
       }
     };
   }
-
-  /*function showExoCreateBox() {
-    Swal.fire({
-      title: 'Crear Exoplaneta',
-      html:
-        '<input id="id" class="swal2-input" placeholder="Id Wikidata">' +
-        '<input id="image" class="swal2-input" placeholder="Link Imagen">' +
-        '<input id="name" class="swal2-input" placeholder="Nombre">' +
-        '<input id="discoverer" class="swal2-input" placeholder="Descubridor">' +
-        '<input id="wiki" class="swal2-input" placeholder="Link Wikipedia">',
-      focusConfirm: false,
-      preConfirm: () => {
-        exoplanetaCreate();
-      }
-    })
-  }
-  
-  function exoplanetaCreate() {
-    const id = document.getElementById("id").value;
-    const image = document.getElementById("image").value;
-    const name = document.getElementById("name").value;
-    const discoverer = document.getElementById("discoverer").value;
-    const wiki = document.getElementById("wiki").value;
-      
-    const xhttp = new XMLHttpRequest();
-    xhttp.open("POST", "http://localhost:4000/api/exoplanets/create");
-    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhttp.send(JSON.stringify({ 
-      "id": id, "image": image, "name": name, "discoverer": discoverer, 
-      "wiki": wiki
-    }));
-    xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        const objects = JSON.parse(this.responseText);
-        Swal.fire(objects['message']);
-        loadTable();
-      }
-    };
-  }*/

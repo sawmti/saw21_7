@@ -185,6 +185,7 @@ function irAdmin()
                   indice = indice + 1;
                   sumTotal = sumTotal + 1;
                 }
+                document.getElementById("totalPlanetas").innerHTML = ' <p class="cantidad">Existen '+total+' exoplanetas registrados</p>';
                 document.getElementById("carousel").innerHTML = trHTML;
               }
             };
