@@ -19,7 +19,7 @@ npm install
 npm start
 ```
 
-You should be able to access the application in [http://localhost:4000](http://localhost:4000).
+You should be able to access the application in [http://localhost:4000](http://localhost:4000) and documentation api [http://localhost:4000/api-docs/](http://localhost:4000/api-docs)
 
 ## Running from Docker
 
