@@ -20,7 +20,8 @@
 
     <div class="container">
       <div class="d-flex bd-highlight mb-3">
-        <div class="me-auto p-2 bd-highlight"><h2>EXOPLANETAS</div>
+        <div class="p-sm-2 bd-highlight"><b>Busqueda por Id o Nombre de Exoplaneta</b></div>
+        <div class="me-auto p-2 "><input type="text" id="myInput" onkeyup="buscar()" placeholder="Buscar por ID o Nombre"></div>
         <div class="p-2 bd-highlight">
           <button type="button" class="btn btn-secondary" onclick="agregarExoplanetas()">AGREGAR DESDE WIKIDATA</button>
           <button type="button" class="btn btn-secondary" onclick="volverHome()">IR AL HOME</button>
@@ -28,7 +29,7 @@
       </div>
       
       <div class="table-responsive">
-        <table class="table">
+        <table class="table"  id="dataTable">
           <thead>
             <tr>
               <th scope="col">Id</th>
@@ -36,7 +37,7 @@
               <th scope="col">Nombre</th>
               <th scope="col">Descubridor</th>
               <th scope="col">Link</th>
-              <th scope="col">Action</th>
+              <th scope="col">Acciones</th>
             </tr>
           </thead>
           <tbody id="mytable">

@@ -51,8 +51,9 @@ function loadTable() {
   }
 
   
-  loadIdExistentes();
-  loadTable();
+loadIdExistentes();
+loadTable();
+
   
   function showExoEditBox(id) {
     console.log(id);
@@ -73,10 +74,10 @@ function loadTable() {
           width: 650,
           html:
             '<label>Wikidata id</label><br><input id="id" class="swal2-input" placeholder="Id Wikidata" value="'+textId+'" readonly>' +
-            '<br><br><label>Imagen</label><br><input id="image" class="swal2-input" placeholder="Link Imagen" value="'+object.image.value+'" size="45">' +
-            '<br><br><label>Nombre</label><br><input id="name" class="swal2-input" placeholder="Nombre" value="'+object.exoplanetaLabel.value+'" size="45">' +
-            '<br><br><label>Descubridor</label><br><input id="discoverer" class="swal2-input" placeholder="Descubridor" value="'+object.dicovererLabel.value+'" size="45">' +
-            '<br><br><label>Link Wikipedia</label><br><input id="wiki" class="swal2-input" placeholder="Link Wikipedia" value="'+object.link.value+'" size="45">',
+            '<br><br><label>Imagen</label><br><input id="image" class="swal2-input" placeholder="Link Imagen" value="'+object.image.value+'" size="45" readonly>' +
+            '<br><br><label>Nombre</label><br><input id="name" class="swal2-input" placeholder="Nombre" value="'+object.exoplanetaLabel.value+'" size="45" readonly>' +
+            '<br><br><label>Descubridor</label><br><input id="discoverer" class="swal2-input" placeholder="Descubridor" value="'+object.dicovererLabel.value+'" size="45" readonly>' +
+            '<br><br><label>Link Wikipedia</label><br><input id="wiki" class="swal2-input" placeholder="Link Wikipedia" value="'+object.link.value+'" size="45" readonly>',
           focusConfirm: false,
           preConfirm: () => {
             exoplanetaCreate();
@@ -115,3 +116,28 @@ function loadTable() {
  
      window.location.href="/admin.html";
   }
+
+  function buscar() {
+		// Declare variables
+		var input, filter, table, tr, td, i, txtValue;
+		input = document.getElementById("myInput");
+		filter = input.value.toUpperCase();
+		table = document.getElementById("dataTable");
+		tr = table.getElementsByTagName("tr");
+		
+		// Loop through all table rows, and hide those who don't match the search query
+		for (i = 0; i < tr.length; i++) {
+			td1 = tr[i].getElementsByTagName("td")[0];
+			td2 = tr[i].getElementsByTagName("td")[2];
+			if (td1 || td2) {
+			txtValue1 = td1.textContent || td1.innerText;
+			txtValue2 = td2.textContent || td2.innerText;
+			
+			if ((txtValue1.toUpperCase().indexOf(filter) > -1) || (txtValue2.toUpperCase().indexOf(filter) > -1)) {
+				tr[i].style.display = "";
+			} else {
+				tr[i].style.display = "none";
+			}
+			}
+		}
+		}
