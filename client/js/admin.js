@@ -14,8 +14,8 @@ function loadTable() {
           trHTML += '<td>'+object['name']+'</td>';
           trHTML += '<td>'+object['discoverer']+'</td>';
           trHTML += '<td>'+object['wiki']+'</td>';
-          trHTML += '<td><button type="button" class="btn btn-outline-secondary" onclick="showExoEditBox(\''+object['id']+'\')">Edit</button>';
-          trHTML += '<button type="button" class="btn btn-outline-danger" onclick="exoplanetaDelete(\''+object['id']+'\')">Del</button></td>';
+          trHTML += '<td><button type="button" class="btn btn-outline-secondary" onclick="showExoEditBox(\''+object['id']+'\')">Editar</button>';
+          trHTML += '<button type="button" class="btn btn-outline-danger" onclick="exoplanetaDelete(\''+object['id']+'\')">Eliminar</button></td>';
           trHTML += "</tr>";
         }
         document.getElementById("mytable").innerHTML = trHTML;
@@ -103,3 +103,28 @@ function loadTable() {
       }
     };
   }
+
+  function buscar() {
+		// Declare variables
+		var input, filter, table, tr, td, i, txtValue;
+		input = document.getElementById("myInput");
+		filter = input.value.toUpperCase();
+		table = document.getElementById("dataTable");
+		tr = table.getElementsByTagName("tr");
+		
+		// Loop through all table rows, and hide those who don't match the search query
+		for (i = 0; i < tr.length; i++) {
+			td1 = tr[i].getElementsByTagName("td")[0];
+			td2 = tr[i].getElementsByTagName("td")[2];
+			if (td1 || td2) {
+			txtValue1 = td1.textContent || td1.innerText;
+			txtValue2 = td2.textContent || td2.innerText;
+			
+			if ((txtValue1.toUpperCase().indexOf(filter) > -1) || (txtValue2.toUpperCase().indexOf(filter) > -1)) {
+				tr[i].style.display = "";
+			} else {
+				tr[i].style.display = "none";
+			}
+			}
+		}
+		}
